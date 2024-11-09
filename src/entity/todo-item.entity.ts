@@ -1,6 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-@Entity('public.todo_item')
+@Entity("public.todo_item")
 export class TodoItem {
   @PrimaryGeneratedColumn()
   id: number;
@@ -11,19 +17,18 @@ export class TodoItem {
   @Column({ length: 500, nullable: true })
   content: string | null;
 
-  @Column({ name: 'is_star', default: false })
+  @Column({ name: "is_star", default: false })
   isStar: boolean;
 
-  @Column({ default: 'TODO' })
+  @Column({ default: "TODO" })
   status: string;
 
   @Column({ default: 0 })
   seq: number;
 
-  @CreateDateColumn({ name: 'create_time' })
+  @CreateDateColumn({ name: "create_time" })
   createTime: Date;
 
-  @UpdateDateColumn({ name: 'update_time' })
+  @UpdateDateColumn({ name: "update_time" })
   updateTime: Date;
-
 }
