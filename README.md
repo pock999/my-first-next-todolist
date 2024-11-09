@@ -24,7 +24,7 @@ This is my first project using Next.js. It is a Todo List app with basic feature
 
 ## Database Schema 
 
-### todo
+### todo_item
 
 | name        | type         | desc                       |
 | ----------- | ------------ | -------------------------- |

@@ -1,11 +1,13 @@
 {
   "extends": [
     "airbnb-base",
+    "next/babel",
     "next/core-web-vitals",
     "next/typescript",
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "indent": [2, "tab"],
     "prettier/prettier": [
       "error",
       {
@@ -33,6 +35,7 @@
         "plugin:tailwindcss/recommended",
         "airbnb", 
         "airbnb-typescript",
+        "next/babel",
         "next/core-web-vitals",
         "plugin:prettier/recommended"
       ],
@@ -41,6 +44,7 @@
         "project": "./tsconfig.json"
       },
       "rules": {
+        "indent": [2, "tab"],
         "prettier/prettier": [
           "error",
           {

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -14,7 +15,9 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
