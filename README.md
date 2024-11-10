@@ -1,13 +1,12 @@
 # my-first-next-todolist
 
-
 ## Description
 
 This is my first project using Next.js. It is a Todo List app with basic features like CRUD tasks. I hope this can be helpful for other beginners learning Next.js.
 
 ## Planned Features
- 
-- [ ] Todo Items List
+
+- [x] Todo Items List (no filter)
 - [ ] Todo Item Create
 - [ ] Todo Item Edit
 - [ ] Todo Item Delete
@@ -22,7 +21,7 @@ This is my first project using Next.js. It is a Todo List app with basic feature
 - Single Page: No router used.
 - Login: Not included.
 
-## Database Schema 
+## Database Schema
 
 ### todo_item
 

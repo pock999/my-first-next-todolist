@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 
 @Entity("public.todo_item")
-export class TodoItem {
+export class TodoItemEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
