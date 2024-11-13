@@ -1,4 +1,4 @@
-export class TodoItemCreateDto {
+export interface TodoItemCreateDto {
   title: string;
   content?: string;
   isStar: boolean;

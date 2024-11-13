@@ -1,11 +1,10 @@
 import { getDBConnection } from '@/data-source';
-import { IResponse } from '@/dto/interfaces/response.interface';
-import { TodoItemCreateDto } from '@/dto/req/todo-item-create.dto';
-import { TodoListDto } from '@/dto/res/todo-list.dto';
-import { TodoItemEntity } from '@/entity/todo-item.entity';
+import { IResponse } from '@/dtos/interfaces/response.interface';
+import { TodoItemCreateDto } from '@/dtos/req/todo-item-create.dto';
+import { TodoListDto } from '@/dtos/res/todo-list.dto';
+import { TodoItemEntity } from '@/entitys/todo-item.entity';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import StatusConst from '@/const/status-code.const';
-import MessageConst from '@/const/message.const';
+import ResponseUtil from '@/utils/response.util';
 
 interface TodoItemCreateRequest extends NextApiRequest {
   body: TodoItemCreateDto;
@@ -64,12 +63,7 @@ export default async function handler(
     case 'GET':
       // get
       const result = await conn.getRepository(TodoItemEntity).find();
-      res.status(200).json({
-        message: MessageConst.SUCCESS,
-        httpCode: 200,
-        statusCode: StatusConst.OK,
-        result,
-      });
+      res.status(200).json(ResponseUtil.ok(result));
       break;
     case 'POST':
       // create
@@ -83,20 +77,10 @@ export default async function handler(
           ...data,
         })
         .execute();
-      res.status(200).json({
-        message: MessageConst.SUCCESS,
-        httpCode: 200,
-        statusCode: StatusConst.OK,
-        result: null,
-      });
+      res.status(200).json(ResponseUtil.ok(null));
       break;
     default:
-      res.status(404).json({
-        message: MessageConst.FAILED,
-        httpCode: 404,
-        statusCode: StatusConst.NOT_FOUND,
-        result: null,
-      });
+      res.status(404).json(ResponseUtil.notFound());
   }
 
   return;
