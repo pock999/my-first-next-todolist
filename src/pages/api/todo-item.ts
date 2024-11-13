@@ -1,9 +1,11 @@
-import { getDBConnection } from "@/data-source";
-import { IResponse } from "@/dto/interfaces/response.interface";
-import { TodoItemCreateDto } from "@/dto/req/todo-item-create.dto";
-import { TodoListDto } from "@/dto/res/todo-list.dto";
-import { TodoItemEntity } from "@/entity/todo-item.entity";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { getDBConnection } from '@/data-source';
+import { IResponse } from '@/dto/interfaces/response.interface';
+import { TodoItemCreateDto } from '@/dto/req/todo-item-create.dto';
+import { TodoListDto } from '@/dto/res/todo-list.dto';
+import { TodoItemEntity } from '@/entity/todo-item.entity';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import StatusConst from '@/const/status-code.const';
+import MessageConst from '@/const/message.const';
 
 interface TodoItemCreateRequest extends NextApiRequest {
   body: TodoItemCreateDto;
@@ -59,17 +61,17 @@ export default async function handler(
   const conn = await getDBConnection();
 
   switch (method) {
-    case "GET":
+    case 'GET':
       // get
       const result = await conn.getRepository(TodoItemEntity).find();
       res.status(200).json({
-        message: "success",
+        message: MessageConst.SUCCESS,
         httpCode: 200,
-        statusCode: "000000",
+        statusCode: StatusConst.OK,
         result,
       });
       break;
-    case "POST":
+    case 'POST':
       // create
       const data = req.body;
       await conn
@@ -82,17 +84,17 @@ export default async function handler(
         })
         .execute();
       res.status(200).json({
-        message: "success",
+        message: MessageConst.SUCCESS,
         httpCode: 200,
-        statusCode: "000000",
+        statusCode: StatusConst.OK,
         result: null,
       });
       break;
     default:
       res.status(404).json({
-        message: "not found",
+        message: MessageConst.FAILED,
         httpCode: 404,
-        statusCode: "000001",
+        statusCode: StatusConst.NOT_FOUND,
         result: null,
       });
   }
