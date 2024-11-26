@@ -3,6 +3,7 @@ import { IResponse } from '@/dtos/interfaces/response.interface';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ResponseUtil from '@/utils/response.util';
 import { TodoItemEntity } from '@/entitys/todo-item.entity';
+import { TodoItemUpdateDto } from '@/dtos/req/todo-item-update.dto';
 
 interface DeleteByIdRequest extends NextApiRequest {
   query: {
@@ -10,9 +11,16 @@ interface DeleteByIdRequest extends NextApiRequest {
   };
 }
 
+interface TodoItemUpdateRequest extends NextApiRequest {
+  body: TodoItemUpdateDto;
+  query: {
+    id: string;
+  };
+}
+
 /**
  * @swagger
- * /api/todo-item-delete/{id}:
+ * /api/todo-item/{id}:
  *   delete:
  *     description: Delete Todo Item by id
  *     parameters:
@@ -26,6 +34,32 @@ interface DeleteByIdRequest extends NextApiRequest {
  *     responses:
  *       200:
  *         description: delete item
+ *   put:
+ *     description: Update Todo Item
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The Todo Item Id
+ *         schema:
+ *           type: number
+ *         example: 1
+ *     requestBody:
+ *       description: Optional description in *Markdown*
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: test
+ *               content:
+ *                 type: string
+ *                 example: test
+ *     responses:
+ *       200:
+ *         description: update item
  */
 export default async function handler(
   req: DeleteByIdRequest,
@@ -35,7 +69,7 @@ export default async function handler(
   const { id } = req.query;
   const conn = await getDBConnection();
 
-  if (method !== 'DELETE' || !id) {
+  if ((method !== 'DELETE' && method !== 'PUT') || !id) {
     res.status(404).json(ResponseUtil.notFound());
     return;
   }
@@ -50,6 +84,15 @@ export default async function handler(
     return;
   }
 
-  conn.getRepository(TodoItemEntity).delete(+id);
+  if (method === 'DELETE') {
+    await conn.getRepository(TodoItemEntity).delete(+id);
+  } else {
+    await conn.getRepository(TodoItemEntity).save({
+      ...findResult,
+      ...req.body,
+    });
+  }
+
   res.status(200).json(ResponseUtil.ok(null));
+  return;
 }

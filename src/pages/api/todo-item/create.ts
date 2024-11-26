@@ -12,12 +12,7 @@ interface TodoItemCreateRequest extends NextApiRequest {
 
 /**
  * @swagger
- * /api/todo-item:
- *   get:
- *     description: Returns Todo List
- *     responses:
- *       200:
- *         description: return Todo List
+ * /api/todo-item/create:
  *   post:
  *     description: Create Todo Item
  *     requestBody:
@@ -52,7 +47,7 @@ interface TodoItemCreateRequest extends NextApiRequest {
  *         description: Create Success
  */
 export default async function handler(
-  req: TodoItemCreateRequest, // TODO: filter
+  req: TodoItemCreateRequest,
   res: NextApiResponse<IResponse<any>>
 ) {
   const { method } = req;
