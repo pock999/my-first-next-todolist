@@ -19,4 +19,12 @@ export default {
       result: null,
     };
   },
+  serverErr: (result: any): IResponse<any> => {
+    return {
+      message: MessageConst.ERR,
+      httpCode: 500,
+      statusCode: StatusConst.ERR,
+      result,
+    };
+  },
 };

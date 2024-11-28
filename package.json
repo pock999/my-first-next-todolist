@@ -12,6 +12,8 @@
    },
    "dependencies": {
       "@babel/core": "^7.26.0",
+      "@types/lodash-es": "^4.17.12",
+      "lodash-es": "^4.17.21",
       "next": "14.2.16",
       "next-swagger-doc": "^0.4.1",
       "pg": "^8.13.1",

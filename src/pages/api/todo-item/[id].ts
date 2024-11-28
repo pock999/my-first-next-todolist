@@ -62,7 +62,7 @@ interface TodoItemUpdateRequest extends NextApiRequest {
  *         description: update item
  */
 export default async function handler(
-  req: DeleteByIdRequest,
+  req: DeleteByIdRequest | TodoItemUpdateRequest,
   res: NextApiResponse<IResponse<any>>
 ) {
   const { method } = req;
