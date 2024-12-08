@@ -9,12 +9,6 @@ import ResponseUtil from '@/utils/response.util';
 import { FindManyOptions } from 'typeorm';
 import { Or, Like } from 'typeorm';
 
-interface ListFilterRequest extends NextApiRequest {
-  query: {
-    q: string; // 關鍵字
-  };
-}
-
 /**
  * @swagger
  * /api/todo-item/list:
@@ -30,7 +24,7 @@ interface ListFilterRequest extends NextApiRequest {
  *         description: return Todo List
  */
 export default async function handler(
-  req: ListFilterRequest,
+  req: NextApiRequest,
   res: NextApiResponse<IResponse<any>>
 ) {
   const { method } = req;
@@ -42,16 +36,7 @@ export default async function handler(
     return;
   }
 
-  // keyword
-  const { q } = req.query;
-
   let optionClauseCondition: FindManyOptions = {};
-
-  if (!!q) {
-    optionClauseCondition = {
-      where: [{ title: Like(`%${q}%`) }, { content: Like(`%${q}%`) }],
-    };
-  }
 
   optionClauseCondition.order = {
     seq: 'ASC',
