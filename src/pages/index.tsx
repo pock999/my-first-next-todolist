@@ -20,7 +20,11 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     id: number
   ) => {
     evt.stopPropagation();
-    // TODO call api
+
+    const apiPath = `/api/todo-item/switch-status/${id}`;
+    await fetch(apiPath, {
+      method: 'PUT',
+    }).then((res) => res.json());
 
     setTodoList((prevList) =>
       prevList.map((item) =>
@@ -43,7 +47,11 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     id: number
   ) => {
     evt.stopPropagation();
-    // TODO call api
+
+    const apiPath = `/api/todo-item/mark/${id}`;
+    await fetch(apiPath, {
+      method: 'PUT',
+    }).then((res) => res.json());
 
     setTodoList((prevList) =>
       prevList.map((item) =>
@@ -165,7 +173,7 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   console.log('server side');
-  const apiPath = `${process.env.NEXT_PUBLIC_API_URL}/todo-item/list`;
+  const apiPath = `${process.env.API_URL}/api/todo-item/list`;
   const res: TodoListDto = await fetch(apiPath).then((res) => res.json());
 
   return {
