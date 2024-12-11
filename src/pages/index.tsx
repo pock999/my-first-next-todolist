@@ -73,7 +73,20 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     const newSeq = newList.map((x) => x.id);
 
     if (!_.isEqual(curSeq, newSeq)) {
-      // TODO: update seq
+      const apiPath = `/api/todo-item/change-seq`;
+      await fetch(apiPath, {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(
+          newList.map((x, index) => ({
+            id: x.id,
+            seq: index + 1,
+          }))
+        ),
+      }).then((res) => res.json());
+
       console.log(newList);
       setTodoList(newList);
     }
