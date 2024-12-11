@@ -6,13 +6,12 @@ This is my first project using Next.js. It is a Todo List app with basic feature
 
 ## Planned Features
 
-- [ ] Todo Items List (no filter)
+- [V] Todo Items List
 - [ ] Todo Item Create
 - [ ] Todo Item Edit
 - [ ] Todo Item Delete
-- [ ] Todo Items Filter (Search)
-- [ ] Todo Item Add Star
-- [ ] Todo Item Done
+- [V] Todo Item Add Star
+- [V] Todo Item Done
 
 ## Additional Notes
 
