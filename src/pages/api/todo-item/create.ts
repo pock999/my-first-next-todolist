@@ -54,16 +54,18 @@ export default async function handler(
 
   const conn = await getDBConnection();
 
+  let result: any;
+
   switch (method) {
     case 'GET':
       // get
-      const result = await conn.getRepository(TodoItemEntity).find();
+      result = await conn.getRepository(TodoItemEntity).find();
       res.status(200).json(ResponseUtil.ok(result));
       break;
     case 'POST':
       // create
-      const data = req.body;
-      await conn
+      const data = JSON.parse(req.body as any);
+      result = await conn
         .getRepository(TodoItemEntity)
         .createQueryBuilder()
         .insert()
@@ -72,7 +74,7 @@ export default async function handler(
           ...data,
         })
         .execute();
-      res.status(200).json(ResponseUtil.ok(null));
+      res.status(200).json(ResponseUtil.ok(result.raw[0]));
       break;
     default:
       res.status(404).json(ResponseUtil.notFound());

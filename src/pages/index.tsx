@@ -6,13 +6,69 @@ import { ReactSortable } from 'react-sortablejs';
 import { TodoStatusConst } from '@/consts/todo.const';
 import _ from 'lodash';
 
+const initForm = {
+  isShow: false,
+  id: null,
+  title: '',
+  content: '',
+};
+
 export default function Home(props: { data: Array<TodoItemEntity> }) {
-  const [q, setQ] = React.useState<string>('');
   const [todoList, setTodoList] = React.useState<Array<TodoItemEntity>>([]);
 
   React.useEffect(() => {
     setTodoList(props.data);
   }, []);
+
+  const [form, setForm] = React.useState<{
+    isShow: boolean;
+    id: null | number;
+    title: string;
+    content: string;
+  }>(initForm);
+
+  const setFormValue = (
+    target: 'id' | 'title' | 'content' | 'isShow',
+    value: any
+  ) => {
+    setForm((pre) => ({
+      ...pre,
+      ...(target === 'id' ? { id: value } : {}),
+      ...(target === 'title' ? { title: value } : {}),
+      ...(target === 'content' ? { content: value } : {}),
+      ...(target === 'isShow' ? { isShow: value } : {}),
+    }));
+  };
+
+  const closeForm = () => {
+    setForm(initForm);
+  };
+
+  const submitForm = async () => {
+    let apiPath;
+    if (form.id === null) {
+      // create
+      apiPath = `/api/todo-item/create`;
+      const res = await fetch(apiPath, {
+        method: 'POST',
+        body: JSON.stringify({
+          ..._.pick(form, ['title', 'content']),
+        }),
+      }).then((res) => res.json());
+      setTodoList((preList) => [
+        {
+          ..._.pick(form, ['title', 'content']),
+          ...res,
+        },
+        ...preList,
+      ]);
+    } else {
+      // update
+      apiPath = `/api/todo-item/${form.id}`;
+    }
+
+    closeForm();
+  };
 
   // toggle DONE / TODO
   const toggleDone = async (
@@ -94,29 +150,75 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
 
   return (
     <div
-      className={`grid grid-rows-[100px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
+      className={`grid grid-rows-[10px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
     >
-      <div className={`flex-col flex grow w-full`}>
-        <label
-          htmlFor={'key_word'}
-          className={
-            'flex grow items-center mb-2 text-sm font-medium text-gray-900 dark:text-white'
-          }
+      <div className={`flex w-full justify-center`}>
+        <button
+          type="button"
+          className="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          onClick={() => setFormValue('isShow', true)}
         >
-          Keyword (Title/Content)
-        </label>
-        <input
-          type="text"
-          id="key_word"
-          className={
-            'flex grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 '
-          }
-          placeholder="Keyword"
-          required
-          value={q}
-          onChange={(evt) => setQ(evt.target.value)}
-        />
+          Create Todo
+        </button>
       </div>
+
+      {form?.isShow && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => closeForm()}
+            >
+              &#x2715;
+            </button>
+            <div className={`flex-col flex grow w-full`}>
+              <label
+                htmlFor={'key_word'}
+                className={
+                  'flex grow items-center mb-2 text-sm font-medium text-gray-900 '
+                }
+              >
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                className={
+                  'flex grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 '
+                }
+                placeholder="Title"
+                required
+                value={form.title}
+                onChange={(evt) => setFormValue('title', evt.target.value)}
+              />
+              <label
+                htmlFor="content"
+                className="block mb-2 text-sm font-medium text-gray-900 mt-2 "
+              >
+                Content
+              </label>
+              <textarea
+                id="content"
+                rows={4}
+                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Write contents..."
+                value={form.content}
+                onChange={(evt) => setFormValue('content', evt.target.value)}
+              ></textarea>
+              <div className={`flex w-full justify-center`}>
+                <button
+                  type="button"
+                  className="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                  onClick={() => submitForm()}
+                >
+                  {form.id === null ? 'Create' : 'Update'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ReactSortable
         list={todoList}
         setList={(newState) => sortList(newState)}
