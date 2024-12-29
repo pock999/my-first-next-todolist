@@ -24,7 +24,7 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     isShow: boolean;
     id: null | number;
     title: string;
-    content: string | null;
+    content: string;
   }>(initForm);
 
   const setFormValue = (
@@ -47,7 +47,12 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
   const setEditForm = (id: number) => {
     const formItem = todoList.find((item) => item.id === id);
     if (!_.isEmpty(formItem)) {
-      setForm({ ..._.pick(formItem, ['title', 'content']), isShow: true, id });
+      setForm({
+        ..._.pick(formItem, ['title']),
+        isShow: true,
+        id,
+        content: formItem.content || '',
+      });
     }
   };
 
@@ -91,8 +96,17 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
 
       setTodoList(newList);
     }
-
     closeForm();
+  };
+
+  const deleteTodoItem = async (id: number) => {
+    const apiPath = `/api/todo-item/${id}`;
+    await fetch(apiPath, {
+      method: 'DELETE',
+    }).then((res) => res.json());
+
+    const newList = [...todoList].filter((x) => x.id !== id);
+    setTodoList(newList);
   };
 
   // toggle DONE / TODO
@@ -291,6 +305,7 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
                     <button
                       type="button"
                       className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                      onClick={() => deleteTodoItem(item.id)}
                     >
                       Delete
                     </button>
