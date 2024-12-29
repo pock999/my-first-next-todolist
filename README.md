@@ -7,9 +7,9 @@ This is my first project using Next.js. It is a Todo List app with basic feature
 ## Planned Features
 
 - [V] Todo Items List
-- [ ] Todo Item Create
-- [ ] Todo Item Edit
-- [ ] Todo Item Delete
+- [V] Todo Item Create
+- [V] Todo Item Edit
+- [V] Todo Item Delete
 - [V] Todo Item Add Star
 - [V] Todo Item Done
 
@@ -34,3 +34,19 @@ This is my first project using Next.js. It is a Todo List app with basic feature
 | create_time | timestamptz  | create timestamp           |
 | update_time | timestamptz  | update timestamp           |
 | seq         | integer      | sequence                   |
+
+### DDL
+
+```sql
+CREATE TABLE public.todo_item (
+	id serial NOT NULL,
+	title varchar(50) NOT NULL,
+	"content" varchar(500) NULL,
+	is_star bool NOT NULL DEFAULT false,
+	status varchar(10) NOT NULL DEFAULT 'TODO'::character varying,
+	seq int4 NOT NULL DEFAULT 0,
+	create_time timestamptz NOT NULL DEFAULT now(),
+	update_time timestamptz NOT NULL DEFAULT now(),
+	CONSTRAINT todo_item_pkey PRIMARY KEY (id)
+);
+```
