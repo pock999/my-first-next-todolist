@@ -87,9 +87,10 @@ export default async function handler(
   if (method === 'DELETE') {
     await conn.getRepository(TodoItemEntity).delete(+id);
   } else {
+    const data = JSON.parse(req.body as any);
     await conn.getRepository(TodoItemEntity).save({
       ...findResult,
-      ...req.body,
+      ...data,
     });
   }
 

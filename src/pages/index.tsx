@@ -24,7 +24,7 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     isShow: boolean;
     id: null | number;
     title: string;
-    content: string;
+    content: string | null;
   }>(initForm);
 
   const setFormValue = (
@@ -42,6 +42,13 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
 
   const closeForm = () => {
     setForm(initForm);
+  };
+
+  const setEditForm = (id: number) => {
+    const formItem = todoList.find((item) => item.id === id);
+    if (!_.isEmpty(formItem)) {
+      setForm({ ..._.pick(formItem, ['title', 'content']), isShow: true, id });
+    }
   };
 
   const submitForm = async () => {
@@ -65,6 +72,24 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     } else {
       // update
       apiPath = `/api/todo-item/${form.id}`;
+      await fetch(apiPath, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ..._.pick(form, ['title', 'content']),
+        }),
+      }).then((res) => res.json());
+
+      const newList = [...todoList].map((item) => {
+        if (item.id !== form.id) {
+          return item;
+        }
+        return {
+          ...item,
+          ..._.pick(form, ['title', 'content']),
+        };
+      });
+
+      setTodoList(newList);
     }
 
     closeForm();
@@ -255,6 +280,21 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
                   </h5>
                 </div>
                 <div className="flex items-center h-6">
+                  <div className="inline-flex rounded-md shadow-sm">
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                      onClick={() => setEditForm(item.id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+                    >
+                      Delete
+                    </button>
+                  </div>
                   <svg
                     onClick={(evt) => toggleStar(evt, item.id)}
                     className={
