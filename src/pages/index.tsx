@@ -21,11 +21,6 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
   ) => {
     evt.stopPropagation();
 
-    const apiPath = `/api/todo-item/switch-status/${id}`;
-    await fetch(apiPath, {
-      method: 'PUT',
-    }).then((res) => res.json());
-
     setTodoList((prevList) =>
       prevList.map((item) =>
         item.id === id
@@ -39,6 +34,11 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
           : item
       )
     );
+
+    const apiPath = `/api/todo-item/switch-status/${id}`;
+    await fetch(apiPath, {
+      method: 'PUT',
+    }).then((res) => res.json());
   };
 
   // toggle star
@@ -47,11 +47,6 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     id: number
   ) => {
     evt.stopPropagation();
-
-    const apiPath = `/api/todo-item/mark/${id}`;
-    await fetch(apiPath, {
-      method: 'PUT',
-    }).then((res) => res.json());
 
     setTodoList((prevList) =>
       prevList.map((item) =>
@@ -63,6 +58,11 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
           : item
       )
     );
+
+    const apiPath = `/api/todo-item/mark/${id}`;
+    await fetch(apiPath, {
+      method: 'PUT',
+    }).then((res) => res.json());
   };
 
   // sortList
@@ -73,6 +73,9 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
     const newSeq = newList.map((x) => x.id);
 
     if (!_.isEqual(curSeq, newSeq)) {
+      console.log(newList);
+      setTodoList(newList);
+
       const apiPath = `/api/todo-item/change-seq`;
       await fetch(apiPath, {
         method: 'PATCH',
@@ -86,9 +89,6 @@ export default function Home(props: { data: Array<TodoItemEntity> }) {
           }))
         ),
       }).then((res) => res.json());
-
-      console.log(newList);
-      setTodoList(newList);
     }
   };
 
